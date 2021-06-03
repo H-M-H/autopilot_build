@@ -1,0 +1,29 @@
+name: Build
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macOS-latest]
+        include:
+        - os: macOS-latest
+          build-cmd: MACOSX_DEPLOYMENT_TARGET=10.13 cargo build
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build
+      run: ./build.sh
+      shell: bash
+    - name: Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: ${{ runner.os }}
+        path: |
+          autopilot-screengrab
